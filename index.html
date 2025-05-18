@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <title>SentiStock</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f);
+            font-family: "Nunito", sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.5s ease;
+        }
+        button:focus {
+            outline: 2px solid white;
+        }
+        #mainNavbar {
+            font-size: 1.5rem;
+            font-weight: 500;
+            background: rgba(58, 47, 107, 0.4);
+        }
+        #mainNavbar .navbar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        #headingGroup h1 {
+            font-weight: 200;
+            font-size: 3rem;
+            padding-top: 3%;
+        }
+        .buttons {
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+        .sector:hover, .company:hover {
+            opacity: 0.8;
+        }
+        .btn-square {
+            margin-top: 25%;
+            height: 350px;
+            color: black;
+            background: #ddd;
+            white-space: normal;
+            overflow: hidden;
+            font-size: 1.5rem;
+        }
+        #companies, #results {
+            opacity: 0.3;
+            margin-bottom: 20%;
+            transition: opacity 0.5s ease;
+        }
+        #sectors {
+            margin-bottom: 20%;
+        }
+        #graph {
+            max-height: 600px;
+        }
+        #chart {
+            max-height: 600px;
+        }
+        .table {
+            margin-top: 5%;
+        }
+        #info_button {
+            font-size: 20px;
+            padding: 10px 20px;
+        }
+        .back_button {
+            font-size: 50px;
+        }
+        .plain_button {
+            background-color: transparent;
+            color: white;
+        }
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 2;
+            cursor: pointer;
+        }
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 20px;
+            color: white;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        @media (max-width: 1200px) {
+            #headingGroup h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="mainNavbar" class="navbar navbar-dark py-0 fixed-top">
+        <a href="#" class="navbar-brand">SentiStock</a>
+        <button id="info_button" class="toggleOverlay plain_button btn">
+            <i class="bi bi-info-circle"></i>
+        </button>
+    </nav>
+    <section id="sectors" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="text-white text-center mt-5">
+                    <h1>Select a Sector:</h1>
+                </div>
+                <div class="buttons row mt-4 text-center">
+                    <div class="big_card col-4">
+                        <button id="sb1" class="sector btn btn-block btn-square">Software</button>
+                    </div>
+                    <div class="big_card col-4">
+                        <button id="sb3" class="sector btn btn-block btn-square">Finance</button>
+                    </div>
+                    <div class="big_card col-4">
+                        <button id="sb4" class="sector btn btn-block btn-square">Manufacturing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="companies" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="d-flex justify-content-between align-items-center text-white text-center mt-5">
+                    <h1 class="mx-auto">Select a Company:</h1>
+                    <span style="margin-left: 50px;">
+                        <button id="c_back" class="plain_button back_button btn">
+                            <i class="bi bi-arrow-left-short"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="buttons row mt-4 text-center">
+                    <div class="big_card col-3">
+                        <button id="cb1" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb2" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb3" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb4" class="company btn btn-block btn-square"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="results" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="d-flex justify-content-between align-items-center text-white text-center mt-5">
+                    <h1 class="mx-auto">Results:</h1>
+                    <span style="margin-left: 50px;">
+                        <button id="r_back" class="plain_button back_button btn">
+                            <i class="bi bi-arrow-left-short"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="row">
+                    <div id="graph" class="col-lg-7">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div id="chart" class="col-lg-5">
+                        <table class="table text-white">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Text</th>
+                                    <th scope="col">Sentiment</th>
+                                    <th scope="col">Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">"Good"</th>
+                                    <td>Positive</td>
+                                    <td>.9</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">"Meh..."</th>
+                                    <td>Neutral</td>
+                                    <td>.2</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">"Bad"</th>
+                                    <td>Negative</td>
+                                    <td>.3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="overlay" style="display:none;">
+        <div id="text">
+            <h2>Info</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <button class="toggleOverlay btn btn-light">Close</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="page1.js"></script>
+    <script src="events.js"></script>
+
+
+   
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <title>SentiStock</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f);
+            font-family: "Nunito", sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.5s ease;
+        }
+        button:focus {
+            outline: 2px solid white;
+        }
+        #mainNavbar {
+            font-size: 1.5rem;
+            font-weight: 500;
+            background: rgba(58, 47, 107, 0.4);
+        }
+        #mainNavbar .navbar-brand {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        #headingGroup h1 {
+            font-weight: 200;
+            font-size: 3rem;
+            padding-top: 3%;
+        }
+        .buttons {
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+        .sector:hover, .company:hover {
+            opacity: 0.8;
+        }
+        .btn-square {
+            margin-top: 25%;
+            height: 350px;
+            color: black;
+            background: #ddd;
+            white-space: normal;
+            overflow: hidden;
+            font-size: 1.5rem;
+        }
+        #companies, #results {
+            opacity: 0.3;
+            margin-bottom: 20%;
+            transition: opacity 0.5s ease;
+        }
+        #sectors {
+            margin-bottom: 20%;
+        }
+        #graph {
+            max-height: 600px;
+        }
+        #chart {
+            max-height: 600px;
+        }
+        .table {
+            margin-top: 5%;
+        }
+        #info_button {
+            font-size: 20px;
+            padding: 10px 20px;
+        }
+        .back_button {
+            font-size: 50px;
+        }
+        .plain_button {
+            background-color: transparent;
+            color: white;
+        }
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 2;
+            cursor: pointer;
+        }
+        #text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 20px;
+            color: white;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        @media (max-width: 1200px) {
+            #headingGroup h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="mainNavbar" class="navbar navbar-dark py-0 fixed-top">
+        <a href="#" class="navbar-brand">SentiStock</a>
+        <button id="info_button" class="toggleOverlay plain_button btn">
+            <i class="bi bi-info-circle"></i>
+        </button>
+    </nav>
+    <section id="sectors" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="text-white text-center mt-5">
+                    <h1>Select a Sector:</h1>
+                </div>
+                <div class="buttons row mt-4 text-center">
+                    <div class="big_card col-4">
+                        <button id="sb1" class="sector btn btn-block btn-square">Software</button>
+                    </div>
+                    <div class="big_card col-4">
+                        <button id="sb3" class="sector btn btn-block btn-square">Finance</button>
+                    </div>
+                    <div class="big_card col-4">
+                        <button id="sb4" class="sector btn btn-block btn-square">Manufacturing</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="companies" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="d-flex justify-content-between align-items-center text-white text-center mt-5">
+                    <h1 class="mx-auto">Select a Company:</h1>
+                    <span style="margin-left: 50px;">
+                        <button id="c_back" class="plain_button back_button btn">
+                            <i class="bi bi-arrow-left-short"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="buttons row mt-4 text-center">
+                    <div class="big_card col-3">
+                        <button id="cb1" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb2" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb3" class="company btn btn-block btn-square"></button>
+                    </div>
+                    <div class="big_card col-3">
+                        <button id="cb4" class="company btn btn-block btn-square"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="results" class="container-fluid px-0">
+        <div class="row align-items-center">
+            <div class="col-lg-12">
+                <div id="headingGroup" class="d-flex justify-content-between align-items-center text-white text-center mt-5">
+                    <h1 class="mx-auto">Results:</h1>
+                    <span style="margin-left: 50px;">
+                        <button id="r_back" class="plain_button back_button btn">
+                            <i class="bi bi-arrow-left-short"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="row">
+                    <div id="graph" class="col-lg-7">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                    <div id="chart" class="col-lg-5">
+                        <table class="table text-white">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Text</th>
+                                    <th scope="col">Sentiment</th>
+                                    <th scope="col">Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">"Good"</th>
+                                    <td>Positive</td>
+                                    <td>.9</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">"Meh..."</th>
+                                    <td>Neutral</td>
+                                    <td>.2</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">"Bad"</th>
+                                    <td>Negative</td>
+                                    <td>.3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="overlay" style="display:none;">
+        <div id="text">
+            <h2>Info</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <button class="toggleOverlay btn btn-light">Close</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // Refresh page on logo click
+        $(document).ready(function() {
+            $('.navbar-brand').click(function(e) {
+                e.preventDefault();
+                window.location.reload();
+            });
+
+            // Chart.js setup
+            const ctx = document.getElementById('myChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ["January", "February", "March", "April", "May", "June", "July"],
+                    datasets: [{
+                        label: 'Sentiment',
+                        data: [69, 45, 78, 92, 60, 59, 42],
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        borderColor: '#fff'
+                    }, {
+                        label: 'Stock',
+                        data: [68, 59, 80, 81, 56, 55, 40],
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { labels: { color: '#fff' } },
+                        title: {
+                            display: true,
+                            text: 'Sentiment vs. Stock',
+                            color: '#fff',
+                            font: { size: 18 }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#fff' }, title: { display: true, text: 'Month', color: '#fff' } },
+                        y: { ticks: { color: '#fff' }, title: { display: true, text: 'Value', color: '#fff' } }
+                    }
+                }
+            });
+
+            // Toggle overlay
+            $('.toggleOverlay').click(function() {
+                $('#overlay').toggle();
+            });
+
+            // Set company buttons
+            function setCompanies(companies) {
+                $('#companies .btn-square').each(function(index) {
+                    $(this).text(index < companies.length ? companies[index] : 'N/A');
+                });
+            }
+
+            // Scroll to section
+            function scrollToSection(section) {
+                $(section)[0].scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Dim section
+            function dim(section) {
+                $(section).css({ transition: 'opacity 0.5s ease', opacity: '0.3' });
+            }
+
+            // Brighten section
+            function brighten(section) {
+                $(section).css({ transition: 'opacity 0.5s ease', opacity: '1' });
+            }
+
+            // Change body background
+            function changeBackground(company) {
+                const body = $('body');
+                switch (company) {
+                    case 'Apple':
+                        body.css('background', 'red');
+                        break;
+                    case 'Microsoft':
+                        body.css('background', 'purple');
+                        break;
+                    case 'Salesforce':
+                        body.css('background', 'white');
+                        break;
+                    case 'Alphabet':
+                        body.css('background', 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)');
+                        break;
+                    default:
+                        body.css('background', 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)');
+                }
+            }
+
+            // Event listeners
+            $('.sector').click(function() {
+                dim('#sectors');
+                scrollToSection('#companies');
+                brighten('#companies');
+            });
+
+            $('#c_back').click(function() {
+                scrollToSection('#sectors');
+                brighten('#sectors');
+                dim('#companies');
+                changeBackground(''); // Reset to default gradient
+            });
+
+            $('#r_back').click(function() {
+                scrollToSection('#companies');
+                brighten('#companies');
+                dim('#results');
+            });
+
+            $('.company').click(function() {
+                const selectedCompany = $(this).text().trim();
+                dim('#companies');
+                brighten('#results');
+                scrollToSection('#results');
+                $('#results h1').text(selectedCompany);
+                changeBackground(selectedCompany);
+            });
+
+            // Inside the existing <script> tag, update the changeBackground function
+function changeBackground(company) {
+    const body = $('body');
+    switch (company) {
+        case 'Apple':
+            body.css('background', 'linear-gradient(to right, #ff5e62, #f9d423)'); // Vibrant red to yellow
+            break;
+        case 'Microsoft':
+            body.css('background', 'linear-gradient(to right, #00a4ef, #0078d4)'); // Blue shades
+            break;
+        case 'Salesforce':
+            body.css('background', 'linear-gradient(to right, #00b7eb, #00c7b7)'); // Cyan to teal
+            break;
+        case 'Alphabet':
+            body.css('background', 'linear-gradient(to right, #4285f4, #34a853, #fbbc05, #ea4335)'); // Google colors
+            break;
+        case 'Morgan Stanley':
+            body.css('background', 'linear-gradient(to right, #003087, #005566)'); // Deep blue to teal
+            break;
+        case 'Goldman Sachs':
+            body.css('background', 'linear-gradient(to right, #ffd700, #b8860b)'); // Gold shades
+            break;
+        case 'JPM':
+            body.css('background', 'linear-gradient(to right, #0033a0, #00a1d6)'); // Navy to sky blue
+            break;
+        case 'Mastercard':
+            body.css('background', 'linear-gradient(to right, #cc0000, #ff6200)'); // Red to orange
+            break;
+        case 'General Motors':
+            body.css('background', 'linear-gradient(to right, #003087, #c0c0c0)'); // Blue to silver
+            break;
+        case 'Boeing':
+            body.css('background', 'linear-gradient(to right, #0033a0, #4682b4)'); // Navy to steel blue
+            break;
+        case 'Ford':
+            body.css('background', 'linear-gradient(to right, #0033cc, #00b7eb)'); // Blue shades
+            break;
+        case 'Tesla':
+            body.css('background', 'linear-gradient(to right, #cc0000, #333333)'); // Red to dark gray
+            break;
+        default:
+            body.css('background', 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)'); // Default gradient
+    }
+}
+
+            $('#sb1').click(function() {
+                setCompanies(['Microsoft', 'Salesforce', 'Apple', 'Alphabet']);
+            });
+
+            $('#sb3').click(function() {
+                setCompanies(['Morgan Stanley', 'Goldman Sachs', 'JPM', 'Mastercard']);
+            });
+
+            $('#sb4').click(function() {
+                setCompanies(['General Motors', 'Boeing', 'Ford', 'Tesla']);
+            });
+        });
+    </script>
+</body>
+</html> -->

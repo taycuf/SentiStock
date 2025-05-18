@@ -1,0 +1,142 @@
+body {
+    background: linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f);
+    font-family: "Nunito", sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    transition: background 0.5s ease;
+}
+
+button:focus {
+    outline: 2px solid white;
+}
+
+.blurb h2 {
+    color: #EA1C2C;
+    font-weight: 100;
+    font-size: 2.5rem;
+}
+
+.blurb p {
+    color: #f498b8;
+    font-weight: 100;
+    font-size: 1.125rem;
+    line-height: 2;
+}
+
+.content {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+#mainNavbar {
+    font-size: 1.5rem;
+    font-weight: 500;
+    background: rgba(58, 47, 107, 0.4);
+}
+
+#mainNavbar .nav-link {
+    color: white;
+}
+
+#mainNavbar .nav-link:hover {
+    color: #EA1C2C;
+}
+
+#mainNavbar .navbar-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+#headingGroup h1 {
+    font-weight: 200;
+    font-size: 3rem;
+    padding-top: 3%;
+}
+
+@media (max-width: 1200px) {
+    #headingGroup h1 {
+        font-weight: 100;
+        font-size: 3rem;
+    }
+    .blurb h2 {
+        font-size: 2rem;
+    }
+}
+
+.buttons {
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+.company:hover, .sector:hover {
+    background-color: rgba(0,0,0,.2);
+}
+
+.btn-square {
+    margin-top: 25%;
+    height: 350px;
+    color: black;
+    background: #ddd;
+    white-space: normal;
+    overflow: hidden;
+}
+
+#companies {
+    opacity: 30%;
+    margin-bottom: 20%;
+}
+
+#results {
+    margin-top: 1%;
+    margin-bottom: 20%;
+}
+
+#chart {
+    height: 600px;
+}
+
+.table {
+    margin-left: 0;
+    overflow: scroll;
+    margin-top: 5%;
+}
+
+#info_button {
+    font-size: 20px;
+    padding: 10px 20px;
+}
+
+.back_button {
+    font-size: 50px;
+}
+
+.plain_button {
+    background-color: transparent;
+    color: white;
+}
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    color: white;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
