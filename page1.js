@@ -1,5 +1,6 @@
 // Refresh page on logo click
 $(document).ready(function() {
+    console.log("Hello")
     $('.navbar-brand').click(function(e) {
         e.preventDefault();
         window.location.reload();
@@ -46,10 +47,21 @@ $('.toggleOverlay').click(function() {
     $('#overlay').toggle();
 });
 
-// Set company buttons
+/**
+ * Updates the company buttons with provided company names
+ * @param {Array} companies - Array of company names to display
+ */
 function setCompanies(companies) {
-    $('#companies .btn-square').each(function(index) {
-        $(this).text(index < companies.length ? companies[index] : 'N/A');
+    if (!Array.isArray(companies)) {
+        console.error('setCompanies: companies parameter must be an array');
+        return;
+    }
+    
+    const buttons = $('#companies .btn-square');
+    
+    buttons.each(function(index) {
+        const companyText = index < companies.length ? companies[index] : 'N/A';
+        $(this).text(companyText);
     });
 }
 
@@ -68,25 +80,25 @@ function brighten(section) {
     $(section).css({ transition: 'opacity 0.5s ease', opacity: '1' });
 }
 
-// Change body background
+/**
+ * Changes the background based on the selected company
+ * @param {string} company - The name of the selected company
+ */
 function changeBackground(company) {
     const body = $('body');
-    switch (company) {
-        case 'Apple':
-            body.css('background', 'red');
-            break;
-        case 'Microsoft':
-            body.css('background', 'purple');
-            break;
-        case 'Salesforce':
-            body.css('background', 'white');
-            break;
-        case 'Alphabet':
-            body.css('background', 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)');
-            break;
-        default:
-            body.css('background', 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)');
-    }
+    const backgroundColors = {
+        'Apple': 'red',
+        'Microsoft': 'purple',
+        'Salesforce': 'white',
+        'Alphabet': 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)',
+        // Add more company backgrounds here as needed
+    };
+    
+    // Default gradient if company not found
+    const defaultGradient = 'linear-gradient(to right, #3a2f6b, #36669c, #41a0ae, #3ec995, #77f07f)';
+    
+    // Set background - use the company's color if it exists, otherwise use default
+    body.css('background', backgroundColors[company] || defaultGradient);
 }
 
 
